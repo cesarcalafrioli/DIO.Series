@@ -39,9 +39,21 @@ namespace DIO.Series
             return listaSerie.Count;
         }
 
+        public int qtdSeries()
+        {
+            return listaSerie.Count;    
+        }
+
+        public bool serieExcluida(int id){
+
+            return listaSerie[id].retornaExcluido();
+
+        }
+
         public Serie RetornaPorId(int id)
         {
             return listaSerie[id];
         }
+
     }
 }

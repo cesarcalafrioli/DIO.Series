@@ -116,17 +116,18 @@ namespace DIO.Series
             Console.Write("Digite o título da série: ");
             string entradaTitulo = Console.ReadLine();
 
+            // Verifica se já existe alguma conta com o nome informado pelo usuário
+            // if ( )){
+            //     Console.WriteLine("Já existe uma série com este nome");
+            //     return;
+            // }
+
             Console.Write("Digite o ano de início da série: ");
             int entradaAno = int.Parse(Console.ReadLine());
 
             Console.Write("Digite a descrição da série: ");
             string entradaDescricao = Console.ReadLine();
-
-            // Verifica se já existe alguma conta com o nome informado pelo usuário
-            // if ( contaExiste(entradaNome, 0, 2)){
-            //     Console.WriteLine("Já existe uma conta com este nome");
-            //     return;
-            // }
+        
 
             Serie novaSerie = new Serie(id: repositorio.ProximoId(), genero: (Genero)entradaGenero,
                 titulo: entradaTitulo,
@@ -147,11 +148,6 @@ namespace DIO.Series
 
             Console.Write("Digite o id da série: ");
             int indiceSerie = int.Parse(Console.ReadLine());
-
-            foreach(int i in Enum.GetValues(typeof(Genero)))
-            {
-                Console.WriteLine("{0} - {1}",i, Enum.GetName(typeof(Genero), i));
-            }
 
             Console.Write("Digite o gênero entre as opções acima: ");
             int entradaGenero = int.Parse(Console.ReadLine());
@@ -181,8 +177,31 @@ namespace DIO.Series
             Console.WriteLine("|      EXCLUIR SÉRIE       |");
             Console.WriteLine("----------------------------");
 
+            var lista = repositorio.Lista();
+
+            // Se menhuma série ativa for encontrada
+            if(lista.Count == 0)
+            {
+                Console.WriteLine("Nenhuma série cadastrada.");
+                return;
+            }
+
+            // Retorna apenas séries que não foram excluídas
+            foreach ( var serie in lista)
+            {
+                if ( !serie.retornaExcluido() )
+                Console.WriteLine("#ID {0}: {1}", serie.retornaId(), serie.retornaTitulo());
+            }
+
             Console.Write("Digite o id da série: ");
             int indiceSerie = int.Parse(Console.ReadLine());
+
+            // Verifica se existe alguma série com a id digitada pelo usuário
+            if ( indiceSerie < 0 || indiceSerie > repositorio.qtdSeries() || repositorio.serieExcluida(indiceSerie))
+            {
+                Console.WriteLine("Série não encontrada");
+                return;
+            }
 
             repositorio.Exclui(indiceSerie);
         }
@@ -190,8 +209,28 @@ namespace DIO.Series
         // Retorna o nome da série após digitar o ID
         private static void VisualizarSerie()
         {
+            Console.WriteLine("----------------------------");
+            Console.WriteLine("|     VISUALIZAR SÉRIE     |");
+            Console.WriteLine("----------------------------");
+
+            var lista = repositorio.Lista();
+
+            // Verifica primeiro se alguma série existe
+            if(lista.Count == 0)
+            {
+                Console.WriteLine("Nenhuma série cadastrada.");
+                return;
+            }
+
             Console.Write("Digite o id da série: ");
             int indiceSerie = int.Parse(Console.ReadLine());
+
+            // Verifica se existe alguma série com a id digitada pelo usuário
+            if ( indiceSerie < 0 || indiceSerie > repositorio.qtdSeries() || repositorio.serieExcluida(indiceSerie))
+            {
+                Console.WriteLine("Série não encontrada");
+                return;
+            }
 
             var serie = repositorio.RetornaPorId(indiceSerie);
 
